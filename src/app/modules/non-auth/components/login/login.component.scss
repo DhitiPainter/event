@@ -1,0 +1,31 @@
+h3 {
+    text-align: center;
+}
+
+.userLogin {
+    text-align: center;
+}
+
+.btnSubmit {
+    margin-left: -25px;
+    margin-top: 20px;
+}
+
+a.forgotLink {
+    position: absolute;
+    text-decoration: none;
+    left: 560px;
+    top: 315px;
+}
+
+a.signupLink {
+    position: absolute;
+    top: 315px;
+    left: 745px;
+}
+
+button.invitedUser.mat-raised-button.mat-primary {
+    position: absolute;
+    top: 245px;
+    left: 730px;
+}

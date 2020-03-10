@@ -1,0 +1,156 @@
+<mat-toolbar color="primary">
+  <span class="fill-remaining-space">Event Management Form</span>
+</mat-toolbar>
+
+<div class="container" *ngIf="!post; else forminfo" novalidate>
+  <form
+    [formGroup]="formGroup"
+    (ngSubmit)="onSubmit()"
+    class="form"
+  >
+    <!-- title -->
+    <mat-form-field class="form-element">
+      <input matInput placeholder="Title" formControlName="title" />
+      <mat-error
+        *ngIf="
+          !formGroup.controls['title'].valid &&
+          formGroup.controls['title'].touched
+        "
+      >
+        Enter valid title
+      </mat-error>
+    </mat-form-field>
+    <!-- all day check -->
+    <div class="form-element">
+      <mat-checkbox formControlName="isAllDay" value="1">ALL Day</mat-checkbox>
+    </div>
+    <!-- start date -->
+    <div *ngIf="formGroup.controls['isAllDay'].value; else startDatetime">
+      <mat-form-field>
+        <input
+          matInput
+          [ngxMatDatetimePicker]="startDate"
+          placeholder="Start date"
+          formControlName="startDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="startDate"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #startDate></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <ng-template #startDatetime>
+      <mat-form-field>
+        <input
+          matInput
+          [ngxMatDatetimePicker]="startDate"
+          placeholder="Start date"
+          formControlName="startDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="startDate"
+        ></mat-datepicker-toggle>
+        <ngx-mat-datetime-picker #startDate></ngx-mat-datetime-picker>
+      </mat-form-field>
+    </ng-template>
+    <!-- end date -->
+    <div *ngIf="formGroup.controls['isAllDay'].value; else endDatetime">
+      <mat-form-field>
+        <input
+          matInput
+          [ngxMatDatetimePicker]="endDate"
+          placeholder="Start date"
+          formControlName="endDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="endDate"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #endDate></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <ng-template #endDatetime>
+      <mat-form-field>
+        <input
+          matInput
+          [ngxMatDatetimePicker]="endDate"
+          placeholder="End date"
+          formControlName="endDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="endDate"
+        ></mat-datepicker-toggle>
+        <ngx-mat-datetime-picker #endDate></ngx-mat-datetime-picker>
+      </mat-form-field>
+    </ng-template>
+
+    <!-- Event Details -->
+    <div>Event Details</div>
+    <!-- location -->
+    <!-- <div class="autocomplete-container">
+      <mat-google-maps-autocomplete
+        (onAutocompleteSelected)="onAutocompleteSelected($event)"
+        (onLocationSelected)="onLocationSelected($event)"
+      >
+      </mat-google-maps-autocomplete>
+    </div> -->
+    <!-- email -->
+    <mat-form-field class="form-element">
+      <input matInput placeholder="Email address" formControlName="email" />
+      <mat-error
+        *ngIf="
+          !formGroup.controls['email'].valid &&
+          formGroup.controls['email'].touched
+        "
+      >
+        {{ getErrorEmail(i) }}
+      </mat-error>
+    </mat-form-field>
+    <!-- description -->
+    <mat-form-field class="form-element">
+      <textarea
+        matInput
+        placeholder="Description"
+        matTextareaAutosize
+        matAutosizeMinRows="2"
+        matAutosizeMaxRows="5"
+        formControlName="desc"
+      ></textarea>
+      <mat-error
+        *ngIf="
+          !formGroup.controls['desc'].valid &&
+          formGroup.controls['desc'].touched
+        "
+      >
+        Must be up to 100 characters.
+      </mat-error>
+    </mat-form-field>
+    <!-- guests -->
+    <!-- <div
+      formArrayName="eventDetails"
+      *ngFor="
+        let guest of formGroup.controls.eventDetails.controls;
+        let i = index
+      "
+    >
+      <div [formGroupName]="i" style="margin-bottom: 10px;"></div> -->
+    <!-- </div>
+      </div> -->
+    <!-- </div> -->
+
+    <div class="form-element">
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        class="button"
+        [disabled]="!formGroup.valid"
+      >
+        Submit Form
+      </button>
+    </div>
+  </form>
+</div>
