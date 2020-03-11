@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 
 import { NonAuthService, AuthService } from 'src/app/core/services';
-import { UserModel } from 'src/app/models';
 
 @Component({
   selector: 'app-login',

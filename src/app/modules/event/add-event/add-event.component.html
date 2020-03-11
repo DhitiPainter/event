@@ -1,13 +1,10 @@
 <mat-toolbar color="primary">
   <span class="fill-remaining-space">Event Management Form</span>
+  <button mat-raised-button color="secondary" (click)="goToList()">List</button>
 </mat-toolbar>
 
 <div class="container" *ngIf="!post; else forminfo" novalidate>
-  <form
-    [formGroup]="formGroup"
-    (ngSubmit)="onSubmit()"
-    class="form"
-  >
+  <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="form">
     <!-- title -->
     <mat-form-field class="form-element">
       <input matInput placeholder="Title" formControlName="title" />
@@ -97,6 +94,7 @@
       >
       </mat-google-maps-autocomplete>
     </div> -->
+    <app-map></app-map>
     <!-- email -->
     <mat-form-field class="form-element">
       <input matInput placeholder="Email address" formControlName="email" />
@@ -128,18 +126,33 @@
         Must be up to 100 characters.
       </mat-error>
     </mat-form-field>
-    <!-- guests -->
-    <!-- <div
-      formArrayName="eventDetails"
-      *ngFor="
-        let guest of formGroup.controls.eventDetails.controls;
-        let i = index
-      "
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      class="button"
+      [disabled]="!formGroup.controls.email.value"
     >
-      <div [formGroupName]="i" style="margin-bottom: 10px;"></div> -->
-    <!-- </div>
-      </div> -->
-    <!-- </div> -->
+      <span (click)="addGuest(); $event.preventDefault()"
+        ><mat-icon>add</mat-icon>Guests</span
+      >
+    </button>
+    <!-- guests -->
+    <div *ngFor="let guest of getGuestsFormControls(); let i = index">
+      <div class="row">
+        <mat-form-field class="form-element guest">
+          <input
+            matInput
+            type="text"
+            placeholder="Guest name"
+            [formControl]="guest"
+          />
+        </mat-form-field>
+        <button mat-raised-button (click)="removeGuest(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
 
     <div class="form-element">
       <button

@@ -4,10 +4,13 @@ import {
   Validators,
   FormBuilder,
   FormControl,
-  FormArray
+  FormArray,
+  AbstractControl
 } from "@angular/forms";
 import { Observable } from "rxjs";
 import { EventService } from "../event.service";
+import { MatSnackBar } from "@angular/material";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-add-event",
@@ -23,7 +26,9 @@ export class AddEventComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private eventService: EventService
+    private eventService: EventService,
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -39,13 +44,21 @@ export class AddEventComponent implements OnInit {
       endDate: [null, [Validators.required]],
       location: ["", []],
       email: ["", [Validators.required, Validators.pattern(emailRegex)]],
-      desc: ["", [Validators.maxLength(100)]]
+      desc: ["", [Validators.maxLength(100)]],
+      guests: this.formBuilder.array([])
     });
   }
 
-  addGuest(event: FormGroup) {
-    let guest = event.get("guests") as FormArray;
-    guest.push(this.formBuilder.control(["", [Validators.maxLength(50)]]));
+  getGuestsFormControls(): AbstractControl[] {
+    return (<FormArray> this.formGroup.get('guests')).controls
+  }
+
+  addGuest() {
+    (this.formGroup.controls.guests as FormArray).push(this.formBuilder.control(null));
+  }
+
+  removeGuest(index){
+    (this.formGroup.get('guests') as FormArray).removeAt(index);
   }
 
   deleteGuests(index: number) {
@@ -60,41 +73,30 @@ export class AddEventComponent implements OnInit {
     console.log(event);
   }
 
-  // get name() {
-  //   return this.formGroup.get('name') as FormControl
-  // }
-
-  // checkPassword(control) {
-  //   let enteredPassword = control.value
-  //   let passwordCheck = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/;
-  //   return (!passwordCheck.test(enteredPassword) && enteredPassword) ? { 'requirements': true } : null;
-  // }
-
-  checkInUseEmail(control) {
-    // mimic http database access
-    let db = ["tony@gmail.com"];
-    return new Observable(observer => {
-      setTimeout(() => {
-        let result =
-          db.indexOf(control.value) !== -1 ? { alreadyInUse: true } : null;
-        observer.next(result);
-        observer.complete();
-      }, 4000);
-    });
-  }
-
   getErrorEmail(i) {
     return this.formGroup.controls["email"].hasError("required")
       ? "Field is required"
       : this.formGroup.controls["email"].hasError("pattern")
       ? "Invalid email"
-      : this.formGroup.controls["email"].hasError("alreadyInUse")
+      : this.eventService.isDuplicateEmail(
+          this.formGroup.controls["email"].value
+        )
       ? "Email already in use"
       : "";
   }
 
   onSubmit() {
-    if (this.eventService.isDuplicateEmail(this.formGroup.value.email)) return;
+    if (this.eventService.isDuplicateEmail(this.formGroup.value.email)) {
+      this.snackBar.open("Duplicate email", "Error", {
+        duration: 2500,
+        verticalPosition: "top"
+      });
+      return;
+    }
     this.eventService.addEvent(this.formGroup.value);
+  }
+
+  goToList() {
+    this.router.navigate(["event/list"]);
   }
 }

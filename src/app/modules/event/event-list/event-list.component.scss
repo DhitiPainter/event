@@ -1,0 +1,25 @@
+mat-grid-list {
+  margin: 15px;
+  position: relative;
+  height: auto;
+}
+
+mat-grid-tile {
+  background: lightblue;
+  border-radius: 5px;
+  position: absolute;
+  .title {
+    font-weight: 600;
+  }
+}
+
+mat-icon {
+  position: relative;
+  &.add{
+    margin-top: 4px;
+    position: absolute;
+  }
+  &:hover {
+    cursor: pointer;
+  }
+}

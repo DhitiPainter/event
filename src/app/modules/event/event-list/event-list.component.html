@@ -1,1 +1,26 @@
-<p>event-list works!</p>
+<mat-toolbar color="primary">
+  <span class="fill-remaining-space">Events
+    <mat-icon class="add" (click)="addEvent()">add</mat-icon>
+  </span>
+</mat-toolbar>
+
+<mat-grid-list rowHeight="60" [cols]="5">
+  <mat-grid-tile class="title">TITLE</mat-grid-tile>
+  <mat-grid-tile class="title">DURATION</mat-grid-tile>
+  <mat-grid-tile class="title">EMAIL</mat-grid-tile>
+  <mat-grid-tile class="title">LOCATION</mat-grid-tile>
+  <mat-grid-tile class="title">ACTIONS</mat-grid-tile>
+  <div *ngFor="let event of events">
+    <mat-grid-tile> {{ event.title }} </mat-grid-tile>
+    <mat-grid-tile>
+      {{ event.startDate | date: "dd/MM/yyyy" }} -
+      {{ event.endDate | date: "dd/MM/yyyy" }}
+    </mat-grid-tile>
+    <mat-grid-tile>{{ event.email }}</mat-grid-tile>
+    <mat-grid-tile> {{ event.location }}</mat-grid-tile>
+    <mat-grid-tile>
+      <mat-icon (click)="deleteEvent(event)">delete</mat-icon>
+      <mat-icon (click)="alert(event.email)">edit</mat-icon>
+    </mat-grid-tile>
+  </div>
+</mat-grid-list>
