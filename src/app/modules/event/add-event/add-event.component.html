@@ -22,7 +22,10 @@
       <mat-checkbox formControlName="isAllDay" value="1">ALL Day</mat-checkbox>
     </div>
     <!-- start date -->
-    <div *ngIf="formGroup.controls['isAllDay'].value; else startDatetime">
+    <div
+      *ngIf="formGroup.controls['isAllDay'].value; else startDatetime"
+      class="form-element"
+    >
       <mat-form-field>
         <input
           matInput
@@ -38,7 +41,7 @@
       </mat-form-field>
     </div>
     <ng-template #startDatetime>
-      <mat-form-field>
+      <mat-form-field class="form-element">
         <input
           matInput
           [ngxMatDatetimePicker]="startDate"
@@ -53,12 +56,15 @@
       </mat-form-field>
     </ng-template>
     <!-- end date -->
-    <div *ngIf="formGroup.controls['isAllDay'].value; else endDatetime">
+    <div
+      *ngIf="formGroup.controls['isAllDay'].value; else endDatetime"
+      class="form-element"
+    >
       <mat-form-field>
         <input
           matInput
           [ngxMatDatetimePicker]="endDate"
-          placeholder="Start date"
+          placeholder="End date"
           formControlName="endDate"
         />
         <mat-datepicker-toggle
@@ -69,7 +75,7 @@
       </mat-form-field>
     </div>
     <ng-template #endDatetime>
-      <mat-form-field>
+      <mat-form-field class="form-element">
         <input
           matInput
           [ngxMatDatetimePicker]="endDate"
@@ -85,16 +91,28 @@
     </ng-template>
 
     <!-- Event Details -->
-    <div>Event Details</div>
+    <div><b>Event Details</b></div>
     <!-- location -->
-    <!-- <div class="autocomplete-container">
-      <mat-google-maps-autocomplete
-        (onAutocompleteSelected)="onAutocompleteSelected($event)"
-        (onLocationSelected)="onLocationSelected($event)"
-      >
-      </mat-google-maps-autocomplete>
-    </div> -->
-    <app-map></app-map>
+    <mat-form-field class="form-element">
+      <input
+        #search
+        (keyup)="(0)"
+        matInput
+        placeholder="Location"
+        aria-label="Location"
+        [matAutocomplete]="auto"
+        formControlName="location"
+      />
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option
+          (onSelectionChange)="search.value != undefined"
+          *ngFor="let location of filteredLocations | async"
+          [value]="location.name"
+        >
+          <span>{{ location.name }}</span> |
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
     <!-- email -->
     <mat-form-field class="form-element">
       <input matInput placeholder="Email address" formControlName="email" />
@@ -113,7 +131,7 @@
         matInput
         placeholder="Description"
         matTextareaAutosize
-        matAutosizeMinRows="2"
+        matAutosizeMinRows="1"
         matAutosizeMaxRows="5"
         formControlName="desc"
       ></textarea>
@@ -130,8 +148,8 @@
       mat-raised-button
       color="primary"
       type="button"
-      class="button"
-      [disabled]="!formGroup.controls.email.value"
+      class="button guest"
+      *ngIf="formGroup.controls.email.value"
     >
       <span (click)="addGuest(); $event.preventDefault()"
         ><mat-icon>add</mat-icon>Guests</span
@@ -139,31 +157,28 @@
     </button>
     <!-- guests -->
     <div *ngFor="let guest of getGuestsFormControls(); let i = index">
-      <div class="row">
-        <mat-form-field class="form-element guest">
-          <input
-            matInput
-            type="text"
-            placeholder="Guest name"
-            [formControl]="guest"
-          />
-        </mat-form-field>
-        <button mat-raised-button (click)="removeGuest(i)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
-    </div>
-
-    <div class="form-element">
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        class="button"
-        [disabled]="!formGroup.valid"
-      >
-        Submit Form
+      <mat-form-field class="form-element guest">
+        <input
+          matInput
+          type="text"
+          placeholder="Guest name"
+          [formControl]="guest"
+        />
+      </mat-form-field>
+      <button mat-raised-button (click)="removeGuest(i)">
+        <mat-icon>delete</mat-icon>
       </button>
     </div>
+
+    <br />
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      class="button"
+      [disabled]="!formGroup.valid"
+    >
+      Submit Form
+    </button>
   </form>
 </div>

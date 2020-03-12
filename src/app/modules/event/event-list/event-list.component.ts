@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { EventService } from "../event.service";
+import { EventService } from "../../../core/services/event.service";
 import { MatSnackBar } from "@angular/material";
 import { Router } from "@angular/router";
 
@@ -15,7 +15,7 @@ export class EventListComponent implements OnInit {
     private eventService: EventService,
     private snackBar: MatSnackBar,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getEvents();
@@ -30,12 +30,11 @@ export class EventListComponent implements OnInit {
   }
 
   deleteEvent(event) {
-    this.eventService.deleteEvent(event.email).subscribe(x => {
-      this.snackBar.open("Event deleted", "Success", {
-        duration: 2500,
-        verticalPosition: "top"
-      });
-      this.getEvents();
+    this.eventService.deleteEvent(event.email);
+    this.snackBar.open("Event deleted", "Success", {
+      duration: 2500,
+      verticalPosition: "top"
     });
+    this.getEvents();
   }
 }

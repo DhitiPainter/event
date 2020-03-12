@@ -22,6 +22,7 @@ import {
 } from "ngx-mat-datetime-picker";
 import { MatNativeDateModule } from "@angular/material";
 import { MatGridListModule } from "@angular/material/grid-list";
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
 
 @NgModule({
   imports: [
@@ -44,7 +45,8 @@ import { MatGridListModule } from "@angular/material/grid-list";
     NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
     NgxMatNativeDateModule,
-    MatGridListModule
+    MatGridListModule,
+    MatAutocompleteModule
   ],
   exports: [
     MatSnackBarModule,
@@ -66,7 +68,8 @@ import { MatGridListModule } from "@angular/material/grid-list";
     NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
     NgxMatNativeDateModule,
-    MatGridListModule
+    MatGridListModule,
+    MatAutocompleteModule
   ]
 })
 export class MaterialModule {}

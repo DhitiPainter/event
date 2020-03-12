@@ -20,7 +20,7 @@ import { AgmCoreModule } from '@agm/core';
     BrowserAnimationsModule,
     NgHttpLoaderModule.forRoot(),
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyB4SClLrwlRjD3RjZ4yBADSC1ablmNG3mA&input=ahme',
+      apiKey: 'AIzaSyCaKbVhcX_22R_pRKDYuNA7vox-PtGaDkI',
     })
   ],
   providers: [],

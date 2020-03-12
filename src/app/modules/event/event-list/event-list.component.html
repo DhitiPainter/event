@@ -1,15 +1,18 @@
 <mat-toolbar color="primary">
-  <span class="fill-remaining-space">Events
+  <span class="fill-remaining-space"
+    >Events
     <mat-icon class="add" (click)="addEvent()">add</mat-icon>
   </span>
 </mat-toolbar>
 
-<mat-grid-list rowHeight="60" [cols]="5">
-  <mat-grid-tile class="title">TITLE</mat-grid-tile>
-  <mat-grid-tile class="title">DURATION</mat-grid-tile>
-  <mat-grid-tile class="title">EMAIL</mat-grid-tile>
-  <mat-grid-tile class="title">LOCATION</mat-grid-tile>
-  <mat-grid-tile class="title">ACTIONS</mat-grid-tile>
+<mat-grid-list rowHeight="60" [cols]="7" *ngIf="events.length > 0">
+  <mat-grid-tile class="title"><b>Title</b></mat-grid-tile>
+  <mat-grid-tile class="title"><b>Duration</b></mat-grid-tile>
+  <mat-grid-tile class="title"><b>Email</b></mat-grid-tile>
+  <mat-grid-tile class="title"><b>Location</b></mat-grid-tile>
+  <mat-grid-tile class="title"><b>Description</b></mat-grid-tile>
+  <mat-grid-tile class="title"><b>Guests</b></mat-grid-tile>
+  <mat-grid-tile class="title"><b>Actions</b></mat-grid-tile>
   <div *ngFor="let event of events">
     <mat-grid-tile> {{ event.title }} </mat-grid-tile>
     <mat-grid-tile>
@@ -18,9 +21,12 @@
     </mat-grid-tile>
     <mat-grid-tile>{{ event.email }}</mat-grid-tile>
     <mat-grid-tile> {{ event.location }}</mat-grid-tile>
+    <mat-grid-tile class="title">{{ event.desc }}</mat-grid-tile>
+    <mat-grid-tile class="title">{{ event.guests.length }}</mat-grid-tile>
     <mat-grid-tile>
-      <mat-icon (click)="deleteEvent(event)">delete</mat-icon>
-      <mat-icon (click)="alert(event.email)">edit</mat-icon>
+      <mat-icon (click)="deleteEvent(event)">delete</mat-icon>&nbsp;&nbsp;&nbsp;
     </mat-grid-tile>
   </div>
 </mat-grid-list>
+
+<span *ngIf="events.length === 0"><b>No records found</b></span>
