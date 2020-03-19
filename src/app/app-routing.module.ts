@@ -2,7 +2,7 @@ import { ModuleWithProviders } from '@angular/compiler/src/core';
 import { Routes, RouterModule } from '@angular/router';
 import { NotFoundComponent } from './shared';
 
-const routes: Routes = [  
+const routes: Routes = [
   {
     path: '',
     redirectTo: 'event',

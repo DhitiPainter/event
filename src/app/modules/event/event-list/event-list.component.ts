@@ -1,12 +1,13 @@
-import { Component, OnInit } from "@angular/core";
-import { EventService } from "../../../core/services/event.service";
-import { MatSnackBar } from "@angular/material";
-import { Router } from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
+import { Router } from '@angular/router';
+
+import { EventService } from '../../../core/services/event.service';
 
 @Component({
-  selector: "app-event-list",
-  templateUrl: "./event-list.component.html",
-  styleUrls: ["./event-list.component.scss"]
+  selector: 'app-event-list',
+  templateUrl: './event-list.component.html',
+  styleUrls: ['./event-list.component.scss']
 })
 export class EventListComponent implements OnInit {
   events: any[];
@@ -31,10 +32,14 @@ export class EventListComponent implements OnInit {
 
   deleteEvent(event) {
     this.eventService.deleteEvent(event.email);
-    this.snackBar.open("Event deleted", "Success", {
+    this.snackBar.open('Event deleted', 'Success', {
       duration: 2500,
-      verticalPosition: "top"
+      verticalPosition: 'top'
     });
     this.getEvents();
+  }
+
+  editEvent(email) {
+    this.router.navigate(['event/add'], { queryParams: { email } });
   }
 }

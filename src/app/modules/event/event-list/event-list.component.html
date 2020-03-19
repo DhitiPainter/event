@@ -25,6 +25,7 @@
     <mat-grid-tile class="title">{{ event.guests.length }}</mat-grid-tile>
     <mat-grid-tile>
       <mat-icon (click)="deleteEvent(event)">delete</mat-icon>&nbsp;&nbsp;&nbsp;
+      <mat-icon (click)="editEvent(event.email)">edit</mat-icon>
     </mat-grid-tile>
   </div>
 </mat-grid-list>

@@ -1,1 +1,1 @@
-export const EVENT_LIST = "event-list";
+export const EVENT_LIST = 'event-list';
