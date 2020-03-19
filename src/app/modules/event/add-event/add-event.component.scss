@@ -16,14 +16,24 @@
 
 .form-element {
   padding: 5px 5px 10px 5px;
-  width: 49%;
+  width: 24%;
   display: inline-block;
-  &.guest {
-    width: 40%;
-    padding-right: 15px;
+  .delete-guest {
+    float: right;
+  }
+  &.guest{
+    input{
+      width: 90%
+    }
   }
   mat-form-field {
     width: 100%;
+    .form-input {
+      width: 90%;
+    }
+  }
+  &.ngx-mat-timepicker {
+    max-height: 65px;
   }
 }
 
@@ -38,4 +48,13 @@
       position: relative;
     }
   }
+}
+
+mat-icon:hover {
+  cursor: pointer;
+}
+
+.guest-section{
+  border: 2px solid rgba(54, 69, 119, 0.74);
+  border-radius: 5px;
 }

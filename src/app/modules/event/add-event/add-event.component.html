@@ -5,25 +5,12 @@
 
 <div class="container" *ngIf="!post; else forminfo" novalidate>
   <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="form">
-    <!-- title -->
-    <mat-form-field class="form-element">
-      <input matInput placeholder="Title" formControlName="title" />
-      <mat-error
-        *ngIf="
-          !formGroup.controls['title'].valid &&
-          formGroup.controls['title'].touched
-        "
-      >
-        Enter valid title
-      </mat-error>
-    </mat-form-field>
-    <!-- all day check -->
-    <div class="form-element">
-      <mat-checkbox formControlName="isAllDay" value="1">ALL Day</mat-checkbox>
-    </div>
     <!-- start date -->
     <div
-      *ngIf="formGroup.controls['isAllDay'].value; else startDatetime"
+      *ngIf="
+        formGroup.controls['isMultipleDays'].value === 'true';
+        else startDatetime
+      "
       class="form-element"
     >
       <mat-form-field>
@@ -57,7 +44,10 @@
     </ng-template>
     <!-- end date -->
     <div
-      *ngIf="formGroup.controls['isAllDay'].value; else endDatetime"
+      *ngIf="
+        formGroup.controls['isMultipleDays'].value === 'true';
+        else endDatetime
+      "
       class="form-element"
     >
       <mat-form-field>
@@ -89,30 +79,53 @@
         <ngx-mat-datetime-picker #endDate></ngx-mat-datetime-picker>
       </mat-form-field>
     </ng-template>
+    <!-- title -->
+    <mat-form-field class="form-element">
+      <input matInput placeholder="Title" formControlName="title" />
+      <mat-error
+        *ngIf="
+          !formGroup.controls['title'].valid &&
+          formGroup.controls['title'].touched
+        "
+      >
+        Enter valid title
+      </mat-error>
+    </mat-form-field>
+    <!-- all day check -->
+    <div class="form-element">
+      <mat-radio-group formControlName="isMultipleDays">
+        <mat-radio-button value="true">Multiple Days</mat-radio-button
+        >&nbsp;&nbsp;&nbsp;
+        <mat-radio-button value="false">Same Day</mat-radio-button>
+      </mat-radio-group>
+    </div>
 
     <!-- Event Details -->
     <div><b>Event Details</b></div>
     <!-- location -->
-    <mat-form-field class="form-element">
-      <input
-        #search
-        (keyup)="(0)"
-        matInput
-        placeholder="Location"
-        aria-label="Location"
-        [matAutocomplete]="auto"
-        formControlName="location"
-      />
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option
-          (onSelectionChange)="search.value != undefined"
-          *ngFor="let location of filteredLocations | async"
-          [value]="location.name"
-        >
-          <span>{{ location.name }}</span> |
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
+    <div *ngIf="editLocation" class="form-element">
+      <mat-google-maps-autocomplete
+        #eventLocation
+        [appearance]="appearance.STANDARD"
+        [autoCompleteOptions]="autoCompleteOptions"
+        (onAutocompleteSelected)="onAutocompleteSelected($event)"
+      >
+      </mat-google-maps-autocomplete>
+    </div>
+    <div
+      class="form-element"
+      *ngIf="selectedEvent && selectedEvent.selectedAddress && !editLocation"
+    >
+      <mat-form-field>
+        <input
+          class="form-input"
+          matInput
+          disabled
+          value="{{ selectedEvent.selectedAddress.formatted_address }}"
+        />
+        <mat-icon (click)="editLocation = !editLocation">edit</mat-icon>
+      </mat-form-field>
+    </div>
     <!-- email -->
     <mat-form-field class="form-element">
       <input matInput placeholder="Email address" formControlName="email" />
@@ -156,18 +169,23 @@
       >
     </button>
     <!-- guests -->
-    <div *ngFor="let guest of getGuestsFormControls(); let i = index">
-      <mat-form-field class="form-element guest">
-        <input
-          matInput
-          type="text"
-          placeholder="Guest name"
-          [formControl]="guest"
-        />
-      </mat-form-field>
-      <button mat-raised-button (click)="removeGuest(i)">
-        <mat-icon>delete</mat-icon>
-      </button>
+    <div *ngIf="getGuestsFormControls().length" class="guest-section">
+      <div
+        *ngFor="let guest of getGuestsFormControls(); let i = index"
+        class="form-element guest"
+      >
+        <mat-form-field>
+          <input
+            matInput
+            type="text"
+            placeholder="Guest name"
+            [formControl]="guest"
+          />
+          <mat-icon class="delete-guest" (click)="removeGuest(i)"
+            >delete</mat-icon
+          >
+        </mat-form-field>
+      </div>
     </div>
 
     <br />
