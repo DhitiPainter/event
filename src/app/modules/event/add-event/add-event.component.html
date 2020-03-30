@@ -114,14 +114,14 @@
     </div>
     <div
       class="form-element"
-      *ngIf="selectedEvent && selectedEvent.selectedAddress && !editLocation"
+      *ngIf="selectedEvent && selectedEvent.location && !editLocation"
     >
       <mat-form-field>
         <input
           class="form-input"
           matInput
           disabled
-          value="{{ selectedEvent.selectedAddress.formatted_address }}"
+          value="{{ selectedEvent.location.address }}"
         />
         <mat-icon (click)="editLocation = !editLocation">edit</mat-icon>
       </mat-form-field>

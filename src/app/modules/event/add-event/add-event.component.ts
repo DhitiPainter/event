@@ -74,9 +74,9 @@ export class AddEventComponent implements OnInit {
         this.addGuest(g);
       });
     }
-    if (this.selectedEvent.selectedAddress) {
+    if (this.selectedEvent.location) {
       this.autoCompleteOptions = { address: this.selectedEvent.selectedAddress };
-      this.selectedAddress = this.selectedEvent.selectedAddress;
+      this.selectedAddress = this.selectedEvent.location;
       this.formGroup.controls.location.setValue(this.selectedAddress.name);
       this.formGroup.controls.location.updateValueAndValidity();
     }
