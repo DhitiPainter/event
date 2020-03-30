@@ -20,8 +20,8 @@
       {{ event.endDate | date: "dd/MM/yyyy" }}
     </mat-grid-tile>
     <mat-grid-tile>{{ event.email }}</mat-grid-tile>
-    <mat-grid-tile> {{ event.location }}</mat-grid-tile>
-    <mat-grid-tile class="title">{{ event.desc }}</mat-grid-tile>
+    <mat-grid-tile> {{ event.location?.name }}</mat-grid-tile>
+    <mat-grid-tile class="title">{{ event.description }}</mat-grid-tile>
     <mat-grid-tile class="title">{{ event.guests.length }}</mat-grid-tile>
     <mat-grid-tile>
       <mat-icon (click)="deleteEvent(event)">delete</mat-icon>&nbsp;&nbsp;&nbsp;

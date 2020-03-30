@@ -10,7 +10,7 @@ import { EventService } from '../../../core/services/event.service';
   styleUrls: ['./event-list.component.scss']
 })
 export class EventListComponent implements OnInit {
-  events: any[];
+  events: any[] = [];
 
   constructor(
     private eventService: EventService,
@@ -23,7 +23,9 @@ export class EventListComponent implements OnInit {
   }
 
   getEvents() {
-    this.events = this.eventService.getEventList();
+    this.eventService.getEventList().subscribe((res: any) => {
+      this.events = res;
+    });
   }
 
   addEvent() {
@@ -31,12 +33,13 @@ export class EventListComponent implements OnInit {
   }
 
   deleteEvent(event) {
-    this.eventService.deleteEvent(event.email);
-    this.snackBar.open('Event deleted', 'Success', {
-      duration: 2500,
-      verticalPosition: 'top'
+    this.eventService.deleteEvent(event.email).subscribe((res: any) => {
+      this.snackBar.open(res.message, 'Success', {
+        duration: 2500,
+        verticalPosition: 'top'
+      });
+      this.getEvents();
     });
-    this.getEvents();
   }
 
   editEvent(email) {

@@ -17,7 +17,8 @@ import { Appearance } from '@angular-material-extensions/google-maps-autocomplet
 import PlaceResult = google.maps.places.PlaceResult;
 import * as moment from 'moment';
 
-import { EventService } from '../../../core/services/event.service';
+import { LocationService, EventService } from '../../../core/services';
+import { Location as GeoLocation } from './location';
 
 @Component({
   selector: 'app-add-event',
@@ -31,7 +32,7 @@ export class AddEventComponent implements OnInit {
 
   latitude: number;
   longitude: number;
-  selectedAddress: PlaceResult;
+  selectedAddress: GeoLocation;
   appearance = Appearance;
 
   selectedEvent: any = {};
@@ -46,7 +47,8 @@ export class AddEventComponent implements OnInit {
     private eventService: EventService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private locationService: LocationService,
   ) { }
 
   ngOnInit() {
@@ -56,9 +58,11 @@ export class AddEventComponent implements OnInit {
     this.route.queryParams.subscribe(x => {
       if (x.email) {
         this.selectedEventUser = x.email;
-        this.selectedEvent = this.eventService.getEvent(this.selectedEventUser);
-        this.setForm();
-        this.editLocation = false;
+        this.eventService.getEvent(this.selectedEventUser).subscribe((res: any) => {
+          this.selectedEvent = res;
+          this.setForm();
+          this.editLocation = false;
+        });
       }
     });
   }
@@ -91,7 +95,7 @@ export class AddEventComponent implements OnInit {
       endDate: [null, [Validators.required]],
       location: ['', []],
       email: ['', [Validators.required, Validators.pattern(emailRegex)]],
-      desc: ['', [Validators.maxLength(100)]],
+      description: ['', [Validators.maxLength(100)]],
       guests: this.formBuilder.array([])
     });
   }
@@ -115,7 +119,18 @@ export class AddEventComponent implements OnInit {
   }
 
   onAutocompleteSelected(result: PlaceResult) {
-    this.selectedAddress = result;
+    this.locationService.addressComponent = result.address_components;
+
+    this.selectedAddress = {
+      name: result.name,
+      address: result.formatted_address,
+      city: this.locationService.getCity(),
+      state: this.locationService.getState(),
+      country: this.locationService.getCountry(),
+      postalCode: this.locationService.getPostalCode(),
+      lat: result.geometry.location.lat(),
+      lng: result.geometry.location.lng()
+    };
     this.formGroup.controls.location.setValue(this.selectedAddress.name);
     this.formGroup.controls.location.updateValueAndValidity();
     console.log(this.formGroup.controls.location, this.selectedAddress);
@@ -130,23 +145,12 @@ export class AddEventComponent implements OnInit {
       ? 'Field is required'
       : this.formGroup.controls.email.hasError('pattern')
         ? 'Invalid email'
-        : this.eventService.isDuplicateEmail(
-          this.formGroup.controls.email.value
-        )
-          ? 'Email already in use'
-          : '';
+        : '';
   }
 
   onSubmit() {
     const formValue = this.formGroup.value;
-    // check for duplicate email
-    if (!this.selectedEvent.email && this.eventService.isDuplicateEmail(formValue.email)) {
-      this.snackBar.open('Duplicate email', 'Error', {
-        duration: 2500,
-        verticalPosition: 'top'
-      });
-      return;
-    }
+
     // check for 'to' date is greater than 'from'
     if (moment(formValue.startDate).isAfter(moment(formValue.endDate))) {
       this.snackBar.open('End date must be greater', 'Error', {
@@ -162,15 +166,39 @@ export class AddEventComponent implements OnInit {
       });
       return;
     }
-    formValue.selectedAddress = this.selectedAddress;
-    this.selectedEvent.email
-      ? this.eventService.updateEvent(formValue)
-      : this.eventService.addEvent(formValue);
-    this.snackBar.open(this.selectedEvent.email ? 'Event updated' : 'Event added', 'Success', {
-      duration: 2500,
-      verticalPosition: 'top'
+    formValue.location = this.selectedAddress;
+
+    this.selectedEventUser ? this.updateEvent(formValue) : this.addEvent(formValue);
+  }
+
+  addEvent(event) {
+    this.eventService.addEvent(event).subscribe(res => {
+      this.snackBar.open('Event added', 'Success', {
+        duration: 2500,
+        verticalPosition: 'top'
+      });
+      this.goToList();
+    }, err => {
+      this.snackBar.open('Something went wrong', 'Error', {
+        duration: 2500,
+        verticalPosition: 'top'
+      });
     });
-    this.goToList();
+  }
+
+  updateEvent(event) {
+    this.eventService.updateEvent(event).subscribe((res: any) => {
+      this.snackBar.open(res.message, 'Success', {
+        duration: 2500,
+        verticalPosition: 'top'
+      });
+      this.goToList();
+    }, err => {
+      this.snackBar.open(err.message, 'Error', {
+        duration: 2500,
+        verticalPosition: 'top'
+      });
+    });
   }
 
   /**

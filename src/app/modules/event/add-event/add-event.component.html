@@ -146,12 +146,12 @@
         matTextareaAutosize
         matAutosizeMinRows="1"
         matAutosizeMaxRows="5"
-        formControlName="desc"
+        formControlName="description"
       ></textarea>
       <mat-error
         *ngIf="
-          !formGroup.controls['desc'].valid &&
-          formGroup.controls['desc'].touched
+          !formGroup.controls['description'].valid &&
+          formGroup.controls['description'].touched
         "
       >
         Must be up to 100 characters.

@@ -5,11 +5,11 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 import { HttpClientService } from './interceptors/http-client.service';
 import { NotFoundComponent } from '../shared';
-import { EventService } from './services';
+import { EventService, LocationService } from './services';
 
 @NgModule({
   declarations: [NotFoundComponent],
-  providers: [HttpClient, HttpClientService, EventService],
+  providers: [HttpClient, HttpClientService, EventService, LocationService],
   imports: [CommonModule, HttpClientModule, MatSnackBarModule]
 })
 export class CoreModule { }
